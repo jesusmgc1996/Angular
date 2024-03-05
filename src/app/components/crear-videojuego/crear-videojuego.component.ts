@@ -17,9 +17,6 @@ export class CrearVideojuegoComponent {
   videojuego: Videojuego = {}
   desarrolladores: Desarrollador[] = [];
   plataformas: Plataforma[] = [];
-  nombre: string = "";
-  desarrollador: number | undefined;
-  anio: number | undefined;
 
   constructor(private videojuegoService: VideojuegoService, private listarDesarrolladores: DesarrolladorService, private listarPlataformas: PlataformaService, private router: Router) { }
 
@@ -34,14 +31,15 @@ export class CrearVideojuegoComponent {
   }
 
   insertar() {
-    this.videojuego.nombre = this.nombre;
-    this.videojuego.idDesarrollador = this.desarrollador;
-    this.videojuego.idsPlataformas = this.plataformas.filter(plataforma => plataforma.seleccionada).map(plataforma => plataforma.id);
-    this.videojuego.anio = this.anio;
-
-    this.videojuegoService.insertarVideojuego(this.videojuego).subscribe(() => {
-      alert(`El videojuego se ha añadido correctamente.`);
-      this.router.navigate(['']);
-    });
+    if (this.videojuego.nombre && this.videojuego.idDesarrollador && this.plataformas.some(plataforma => plataforma.seleccionada) && this.videojuego.anio) {
+      this.videojuego.idsPlataformas = this.plataformas.filter(plataforma => plataforma.seleccionada).map(plataforma => plataforma.id);
+  
+      this.videojuegoService.insertarVideojuego(this.videojuego).subscribe(() => {
+        alert(`El videojuego se ha añadido correctamente.`);
+        this.router.navigate(['']);
+      });
+    } else {
+      alert(`Debe introducir el nombre y el año y seleccionar un desarrollador y, al menos, una plataforma.`);
+    }
   }
 }

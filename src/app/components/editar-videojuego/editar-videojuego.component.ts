@@ -41,11 +41,15 @@ export class EditarVideojuegoComponent {
   }
 
   actualizar() {
-    this.videojuego.idsPlataformas = Object.keys(this.plataformaSeleccionada).filter(key => this.plataformaSeleccionada[key]).map(id => Number(id));
+    if (this.videojuego.nombre && this.videojuego.idDesarrollador && this.plataformas.some(plataforma => this.plataformaSeleccionada[plataforma.id]) && this.videojuego.anio) {
+      this.videojuego.idsPlataformas = Object.keys(this.plataformaSeleccionada).filter(key => this.plataformaSeleccionada[key]).map(id => Number(id));
 
-    this.videojuegoService.actualizarVideojuego(this.videojuego).subscribe(() => {
-      alert(`El videojuego se ha actualizado correctamente.`);
-      this.router.navigate(['/']);
-    });
+      this.videojuegoService.actualizarVideojuego(this.videojuego).subscribe(() => {
+        alert(`El videojuego se ha actualizado correctamente.`);
+        this.router.navigate(['/']);
+      });
+    } else {
+      alert(`Debe introducir el nombre y el año y seleccionar un desarrollador y, al menos, una plataforma.`);
+    }
   }
 }
